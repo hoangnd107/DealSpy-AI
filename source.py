@@ -5,6 +5,7 @@ import requests
 import schedule
 from seleniumbase import SB
 from dotenv import load_dotenv
+import datetime
 
 load_dotenv()
 BOT_TOKEN = os.getenv('BOT_TOKEN')
@@ -83,7 +84,11 @@ class WebScraper:
                 data_dir = BASE_DATA_DIR
                 os.makedirs(data_dir, exist_ok=True)
                 
-                file_path = os.path.join(data_dir, filename)
+                timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+                filename_without_ext = os.path.splitext(filename)[0]
+                filename_with_timestamp = f"{filename_without_ext}_{timestamp}.csv"
+                
+                file_path = os.path.join(data_dir, filename_with_timestamp)
                 df = pd.DataFrame(data)
                 df.to_csv(file_path, index=False, encoding='utf-8-sig')
                 print(f"Data saved to {file_path}")
