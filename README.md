@@ -1,33 +1,41 @@
-# web-scraping
+# Web Scraper Bot
 
-A Python project for web scraping using SeleniumBase to extract data from dynamic websites efficiently.
+An automated web scraper that collects product data by category and sends results through Telegram at regular intervals.
+
+## Features
+
+- Collect product data from configured categories
+- Save results to CSV files (one per category)
+- Send the CSV files via Telegram
+- Automatically run every 3 hours
 
 ## Setup
 
-1. Clone the repository:
-    ```sh
-    git clone https://github.com/hoangnd107/web-scraping.git
-    cd web-scraping
-    ```
+1. Clone the repository
 
-2. Create a virtual environment and activate it:
+2. Create a virtual environment and activate it (optional):
     ```sh
     python -m venv venv
     source venv/bin/activate  # On Windows use `venv\Scripts\activate`
     ```
 
-3. Install the required packages:
+3. Install required dependencies:
     ```sh
     pip install -r requirements.txt
     ```
 
-## Usage
-
-1. Update the `test_scrape_dropbuy` method in `source.py` with your Telegram bot token and chat ID.
-
-2. Run the scraper:
+4. Configure environment variables: Create a .env file with the following:
     ```sh
-    pytest source.py
+    BOT_TOKEN=your_telegram_bot_token
+    CHAT_ID=your_telegram_chat_id
+    USERNAME_WEB=your_website_username
+    PASSWORD_WEB=your_website_password
+    BASE_DATA_DIR=your_base_data_directory
     ```
 
-3. The scraped data will be saved as CSV files in the project directory and sent to the specified Telegram chat.
+## Usage
+
+Run the main script:
+    ```
+    python source.py
+    ```
