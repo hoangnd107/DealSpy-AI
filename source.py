@@ -1,11 +1,11 @@
 import pandas as pd
 import os
 import time
+import datetime
 import requests
 import schedule
 from seleniumbase import SB
 from dotenv import load_dotenv
-import datetime
 
 load_dotenv()
 BOT_TOKEN = os.getenv('BOT_TOKEN')
@@ -37,30 +37,41 @@ class WebScraper:
             time.sleep(1)
 
             def get_products():
-                products = sb.find_elements("css selector", "div.relative.rounded-b-md.border")
+                products = sb.find_elements("css selector", "a.rounded-b-md.bg-white.text-black")
+                print(f"Total products: {len(products)}")
                 page_data = []
-                
+
                 for product in products:
-                    try:
-                        name = product.find_element("css selector", "div.h-16.line-clamp-3").text.strip()
-                        curr_price = product.find_element("css selector", "div.font-semibold.text-red-500").text.strip()
-                        original_price = product.find_element("css selector", "div.text-xs.text-gray-500.line-through").text.strip()
-                        img = product.find_element("css selector", "img.object-cover.aspect-square").get_attribute("src")
-                        
-                        page_data.append({
-                            "name": name,
-                            "current_price": curr_price,
-                            "original_price": original_price,
-                            "image_url": img
-                        })
-                    except Exception as e:
-                        print(f"Error extracting product: {e}")
-                        continue
-                        
+                    try: product_name = product.find_element("css selector", "div.h-16.line-clamp-3").text.strip()
+                    except: product_name = "N/A"
+
+                    try: current_price = product.find_element("css selector", "div.font-semibold.text-red-500").text.strip()
+                    except: current_price = "N/A"
+
+                    try: original_price = product.find_element("css selector", "div.text-xs.text-gray-500.line-through").text.strip()
+                    except: original_price = "N/A"
+
+                    try: product_img = product.find_element("css selector", "img.object-cover.aspect-square").get_attribute("src")
+                    except:product_img = "N/A"
+
+                    try: product_link = product.get_attribute("href")
+                    except: product_link = "N/A"
+
+                    product_info = {
+                        "product_name": product_name,
+                        "current_price": current_price,
+                        "original_price": original_price,
+                        "product_img": product_img,
+                        "product_link": product_link
+                    }
+                    
+                    page_data.append(product_info)
+
                 return page_data
 
             def scrape_category(category_url):
                 sb.click(f'a[href*="{category_url}"]')
+                print(f"Scraping category: {category_url}")
                 time.sleep(1)
                 
                 all_products = []
@@ -71,10 +82,15 @@ class WebScraper:
                     products = get_products()
                     all_products.extend(products)
                     
-                    next_button = sb.find_elements("css selector", "li.ant-pagination-next:not(.ant-pagination-disabled)")
-                    if not next_button: break
-                    
-                    sb.click("li.ant-pagination-next")
+                    try:
+                        next_button = sb.find_elements("css selector", "li.ant-pagination-next:not(.ant-pagination-disabled)")
+                        if not next_button: break
+                        
+                        sb.click("li.ant-pagination-next")
+                    except Exception as e:
+                        print(f"Error during pagination: {str(e)}")
+                        break
+
                     time.sleep(1)
                     page+=1
                     
@@ -84,7 +100,7 @@ class WebScraper:
                 data_dir = BASE_DATA_DIR
                 os.makedirs(data_dir, exist_ok=True)
                 
-                timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+                timestamp = datetime.datetime.now().strftime(r'%Y%m%d_%H%M%S')
                 filename_without_ext = os.path.splitext(filename)[0]
                 filename_with_timestamp = f"{filename_without_ext}_{timestamp}.csv"
                 
@@ -115,8 +131,7 @@ class WebScraper:
 
 def run_scraper():
     scraper = WebScraper()
-    try:
-        scraper.scrape_dropbuy()
+    try: scraper.scrape_dropbuy()
     except Exception as e:
         print(f"Error during scraping: {str(e)}")
 
