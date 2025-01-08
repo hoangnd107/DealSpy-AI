@@ -47,5 +47,5 @@ Run the scraper:
 
 Run the analysis:
     ```
-    python analysis.py
+    python product_analyzer.py
     ```
