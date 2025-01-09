@@ -114,6 +114,7 @@ def run_scraper():
 
 if __name__ == "__main__":
     run_scraper()
+    schedule.every().day.at("00:00").do(run_scraper)
     schedule.every(6).hours.do(run_scraper)
     while True:
         schedule.run_pending()

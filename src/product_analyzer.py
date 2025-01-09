@@ -144,7 +144,8 @@ def run_analysis():
 
 if __name__ == "__main__":
     run_analysis()
-    schedule.every().day.at("05:00").do(run_analysis)
+    schedule.every().day.at("00:10").do(run_analysis)
+    schedule.every(6).hours.do(run_analysis)
     while True:
         schedule.run_pending()
         time.sleep(1)

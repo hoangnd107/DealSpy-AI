@@ -1,15 +1,15 @@
 # DealSpy AI
 
-An automated system that scrapes product data from e-commerce sites, analyzes deals, and sends notifications through Telegram.
+An automated deal tracking system that scrapes e-commerce sites, analyzes prices, and sends Telegram notifications for the best deals
 
 ## Features
 
-- Automated web scraping every 6 hours
+- Automated web scraping
 - Price tracking and discount analysis 
 - AI-powered deal recommendations
 - CSV exports with timestamp tracking
 - Real-time Telegram notifications
-- Daily deal analysis reports at 5:00 AM
+- Daily deal analysis reports
 
 ## Setup
 
@@ -28,24 +28,44 @@ An automated system that scrapes product data from e-commerce sites, analyzes de
 
 4. Configure environment variables: Create a .env file with the following:
     ```sh
-    BASE_DATA_DIR=your_base_data_directory
-    BASE_ANALYSIS_DIR=your_base_analysis_directory
-    BOT_TOKEN=your_telegram_bot_token
-    USERNAME_WEB=your_website_username
-    PASSWORD_WEB=your_website_password
-    CHAT_ID=your_telegram_chat_id
-    API_URL=your_api_url
-    API_KEY=your_api_key
+    BASE_DATA_DIR=path_to_data_folder
+    BASE_ANALYSIS_DIR=path_to_analysis_folder
+    BOT_TOKEN=telegram_bot_token
+    USERNAME_WEB=website_username
+    PASSWORD_WEB=website_password
+    CHAT_ID=telegram_chat_id
+    API_URL=ai_api_url
+    API_KEY=ai_api_key
     ```
 
 ## Usage
 
-Run the scraper:
+Start data collection:
     ```
     python web_scraper.py
     ```
 
-Run the analysis:
+Run analysis:
     ```
     python product_analyzer.py
     ```
+
+Launch web interface:
+    ```
+    python app.py
+    ```
+
+## Project Structure
+
+```plaintext
+DealSpy-AI/
+├── src/
+│   ├── app.py              # Flask web interface
+│   ├── web_scraper.py      # Data collection
+│   ├── product_analyzer.py # Deal analysis
+│   └── telegram_sender.py  # Notifications
+├── templates/
+│   └── products.html       # Product display template
+├── requirements.txt        # Dependencies
+└── .env                    # Environment config
+```
